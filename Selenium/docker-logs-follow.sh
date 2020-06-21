@@ -1,1 +1,1 @@
-docker logs -f selenium-hub-test
+docker logs -f selenium-test

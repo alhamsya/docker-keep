@@ -6,13 +6,13 @@ version: "3.7"
 
 services:
   hub:
-    container_name: selenium-hub-test
+    container_name: selenium-test
     image: selenium/hub:3.141.59-20200525
     ports:
       - "4444:4444"
 
   chrome:
-    container_name: selenium-chrome-test
+    container_name: chrome-test
     image: selenium/node-chrome:3.141.59-20200525
     volumes:
       - /dev/shm:/dev/shm
@@ -24,7 +24,7 @@ services:
     entrypoint: bash -c 'SE_OPTS="-host $$HOSTNAME" /opt/bin/entry_point.sh'
 
   firefox:
-    container_name: selenium-firefox-test
+    container_name: firefox-test
     image: selenium/node-firefox:3.141.59-20200525
     volumes:
       - /dev/shm:/dev/shm
