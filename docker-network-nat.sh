@@ -1,0 +1,1 @@
+docker network create --driver nat DockerNet --subnet 192.28.0.0/16 --gateway 192.28.0.1 docker-network-nat
