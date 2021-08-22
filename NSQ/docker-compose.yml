@@ -11,7 +11,7 @@ services:
   nsqd:
     container_name: nsqd-test
     image: nsqio/nsq
-    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160 --broadcast-address=182.28.0.1
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160 --broadcast-address=kubernetes.docker.internal
     depends_on:
       - nsqlookupd
     ports:
