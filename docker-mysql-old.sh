@@ -1,1 +1,0 @@
-docker run --detach --name=mysql-old-test --net docker-network --ip 182.28.0.7 --env="MYSQL_ROOT_PASSWORD=alhamsya" mysql:5.7.25
