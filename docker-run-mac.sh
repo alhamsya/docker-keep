@@ -22,4 +22,4 @@ docker run --detach --name=metabase-test --net docker-network --ip 182.28.0.6 --
 
 docker run --detach --name=rabbitmq-test --net docker-network --ip 182.28.0.7 --publish 15672:15672 --publish 5672:5672 --volume rabbitmq-volume:/var/lib/rabbitmq rabbitmq:3-management
 
-docker run --detach --name=toxiproxy-test --net docker-network --publish 8474:8474 shopify/toxiproxy
+docker run --detach --name=toxiproxy-test --net docker-network --ip 182.28.0.8 --publish 8474:8474 shopify/toxiproxy
