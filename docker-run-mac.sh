@@ -24,4 +24,4 @@ docker run --detach --name=rabbitmq-test --net docker-network --ip 182.28.0.7 --
 
 docker run --detach --name=toxiproxy-test --net docker-network --ip 182.28.0.8 --publish 8474:8474 shopify/toxiproxy
 
-docker run --detach --name=jaeger-test --net docker-network --ip 182.28.0.9 --publish 6831:6831/udp --publish 16686:16686 -env="JAEGER_AGENT_HOST=jaeger-test" jaegertracing/all-in-one:latest
+docker run --detach --name=jaeger-test --net docker-network --ip 182.28.0.9 --publish 6831:6831/udp --publish 16686:16686 --volume jaeger-volume:/tmp --env="JAEGER_AGENT_HOST=jaeger-test" jaegertracing/all-in-one:latest
