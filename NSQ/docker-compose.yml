@@ -1,6 +1,7 @@
 version: "2"
 services:
   nsqlookupd:
+    platform: linux/amd64
     container_name: nsqlookupd-test
     image: nsqio/nsq
     command: /nsqlookupd
@@ -9,9 +10,11 @@ services:
       - "4161:4161"
     restart: always
   nsqd:
+    platform: linux/amd64
     container_name: nsqd-test
     image: nsqio/nsq
-    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160 --broadcast-address=kubernetes.docker.internal
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+      --broadcast-address=kubernetes.docker.internal
     depends_on:
       - nsqlookupd
     ports:
@@ -19,6 +22,7 @@ services:
       - "4151:4151"
     restart: always
   nsqadmin:
+    platform: linux/amd64
     container_name: nsqadmin-test
     image: nsqio/nsq
     command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
