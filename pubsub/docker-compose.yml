@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  pubsub_emulator:
+    platform: linux/amd64
+    image: messagebird/gcloud-pubsub-emulator:latest
+    ports:
+      - "8681:8681"
+    environment:
+      - PUBSUB_PROJECT1=test-project,sekuritas-opening-account-background-process:sekuritas-opening-account-background-process-sub
+    volumes:
+      - ./gcloud-pubsub-emulator-volume:/gcloud-pubsub-emulator/data
+    restart: always
+
+  emulator-ui:
+    platform: linux/amd64
+    image: ghcr.io/neoscript/pubsub-emulator-ui:latest
+    ports:
+      - "4200:80"
+    restart: always
