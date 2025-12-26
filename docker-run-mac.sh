@@ -17,9 +17,17 @@ docker run --detach \
 --volume sonarqube-volume_extensions:/opt/sonarqube/extensions \
 --volume sonarqube-volume_logs:/opt/sonarqube/logs \
 --volume sonarqube-volume_data:/opt/sonarqube/data \
-sonarqube:9.3-community
+sonarqube:9.3-community # port-ui:9000
 
-docker run --detach --name=metabase-test --net docker-network --ip 182.28.0.6 --publish 3000:3000 --volume metabase-volume:/metabase-data -e "JAVA_OPTS=-Xmx6g" --platform linux/amd64 metabase/metabase
+docker run --detach \
+--name=metabase-test \
+--net docker-network \
+--ip 182.28.0.6 \
+--publish 3000:3000 \
+--volume metabase-volume:/metabase-data \
+--env "JAVA_OPTS=-Xmx6g" \
+--platform linux/amd64 \
+metabase/metabase # port-ui:3000
 
 docker run --detach --name=rabbitmq-test --net docker-network --ip 182.28.0.7 --publish 15672:15672 --publish 5672:5672 --volume rabbitmq-volume:/var/lib/rabbitmq rabbitmq:3-management
 
@@ -34,7 +42,8 @@ docker run --detach \
 --publish 8200:8200 \
 --volume vault-volume:/vault/logs \
 --volume vault-volume:/vault/file \
---cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=alhamsya' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200' vault
+--cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=alhamsya' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200' \
+vault # port-ui:8200
 
 docker run --detach \
 --name=redis-old-test \
@@ -42,7 +51,7 @@ docker run --detach \
 --ip 182.28.0.11 \
 --publish 6379:6379 \
 --volume redis-volume-old:/data \
-redis:5.0
+redis:5.0 # port-ui:6379
 
 docker run -it --name=ngrok-test --net docker-network ngrok/ngrok http 10002
 docker run -it --name=ngrok-test --net docker-network --ip 182.28.0.12 --publish 3000:4040 ngrok/ngrok http 10002
@@ -71,7 +80,7 @@ docker run --detach \
 --ip 182.28.0.15 \
 --publish 6378:6379 \
 --volume redis-volume:/data \
-redis
+redis # port-ui:6378
 
 docker run --detach \
 --name=pubsub-ui-test \
@@ -100,18 +109,24 @@ docker run --detach \
 --volume /arangodb/logs/:/var/log/arangodb3 \
 arangodb:latest
 
-docker run -d --name kafka-test --hostname kafka-server \
---network app-tier \
--e KAFKA_CFG_NODE_ID=0 \
--e KAFKA_CFG_PROCESS_ROLES=controller,broker \
--e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
--e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
--e KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-server:9093 \
--e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER \
-bitnami/kafka:latest
-
-docker run --detach \
---name=redpanda-test \
+docker run -d \
 --ip 182.28.0.19 \
---publish 5050:8080 \
--e KAFKA_BROKERS=localhost:9092 docker.redpanda.com/redpandadata/console:latest
+--publish 8529:8529 \
+--volume $HOME/flipt:/var/opt/flipt \
+--volume $HOME/flipt/config.yaml:/etc/flipt/config.yaml \
+docker.flipt.io/flipt/flipt:latest # port-ui:1000
+
+docker compose -f ./nsq.yml -p nsq up -d # port-ui:1200
+
+docker compose -f ./redpanda.yml -p redpanda up -d # port-ui:1300
+
+docker run -d \
+    --name flipt \
+    -p 8080:8080 \
+    -p 9000:9000 \
+    -v $HOME/flipt:/var/opt/flipt \
+    docker.flipt.io/flipt/flipt:v1.50.1
+
+
+docker run -v </a/local/data/folder>:/pgdata -e PGDATA=/pgdata \
+    -d --name timescaledb -p 5435:5435 -e POSTGRES_PASSWORD=alhamsya timescale/timescaledb:latest-pg18
